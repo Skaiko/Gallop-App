@@ -23,16 +23,26 @@ function App() {
 
           {/* Login + Sign Up Buttons (LHS) */}
           <div className="header-buttons">
-            <button className="btn-login">Log In</button>
-            <button className="btn-signup">Sign Up</button>
+            <img src="/login-button.png" alt="Log In" className="btn-login-img" />
+            <img src="/signup-button.png" alt="Sign Up" className="btn-signup-img" />
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
       <section className="hero">
-        <div className="hero-decoration hero-star-top">⭐</div>
-        <div className="hero-decoration hero-muscle-bottom">💪</div>
+        {/* Floating Horseshoes Background */}
+        <div className="floating-horseshoes">
+          <img src="/horseshoe-red.png" alt="" className="horseshoe horseshoe-1" />
+          <img src="/horseshoe-blue.png" alt="" className="horseshoe horseshoe-2" />
+          <img src="/horseshoe-purple.png" alt="" className="horseshoe horseshoe-3" />
+          <img src="/horseshoe-green.png" alt="" className="horseshoe horseshoe-4" />
+          <img src="/horseshoe-orange.png" alt="" className="horseshoe horseshoe-5" />
+          <img src="/horseshoe-yellow.png" alt="" className="horseshoe horseshoe-6" />
+          <img src="/horseshoe-green.png" alt="" className="horseshoe horseshoe-7" />
+          <img src="/horseshoe-orange.png" alt="" className="horseshoe horseshoe-8" />
+          <img src="/horseshoe-yellow.png" alt="" className="horseshoe horseshoe-9" />
+        </div>
 
         <h2>Transform Your Physical Therapy Practice</h2>
         <p>
@@ -47,6 +57,16 @@ function App() {
 
       {/* Featured Section */}
       <section className="features">
+
+        <div className="floating-horseshoes">
+          <img src="/horseshoe-blue.png" alt="" className="horseshoe horseshoe-10" />
+          <img src="/horseshoe-purple.png" alt="" className="horseshoe horseshoe-11" />
+          <img src="/horseshoe-orange.png" alt="" className="horseshoe horseshoe-12" />
+          <img src="/horseshoe-red.png" alt="" className="horseshoe horseshoe-13" />
+          <img src="/horseshoe-green.png" alt="" className="horseshoe horseshoe-14" />
+          <img src="/horseshoe-yellow.png" alt="" className="horseshoe horseshoe-15" />
+        </div>
+
         <div className="features-title">
           <h2>Built for Everyone in Physical Therapy</h2>
         </div>
@@ -54,7 +74,13 @@ function App() {
         <div className="features-grid">
           {/* For PTs Card */}
           <div className="feature-card card-blue">
-            <div className="card-decoration">⭐</div>
+            <div className="card-decoration">
+              <img
+                src="/Horseshoe_blue.png"
+                alt="decoration"
+                className="card-decoration-img"
+              />
+            </div>
             <div className="feature-icon icon-blue">🩺</div>
             <h3>For Physical Therapists</h3>
             <ul>
@@ -67,7 +93,13 @@ function App() {
 
           {/* For Patients Card */}
           <div className="feature-card card-pink">
-            <div className="card-decoration">⭐</div>
+            <div className="card-decoration">
+              <img
+                src="/Horseshoe_pink.png"
+                alt="decoration"
+                className="card-decoration-img"
+              />
+            </div>
             <div className="feature-icon icon-pink">💪</div>
             <h3>For Patients</h3>
             <ul>
@@ -80,7 +112,13 @@ function App() {
 
           {/* For Administrators Card */}
           <div className="feature-card card-orange">
-            <div className="card-decoration">⭐</div>
+            <div className="card-decoration">
+              <img
+                src="/Horseshoe_yellow.png"
+                alt="decoration"
+                className="card-decoration-img"
+              />
+            </div>
             <div className="feature-icon icon-orange">⚙️</div>
             <h3>For Administrators</h3>
             <ul>
