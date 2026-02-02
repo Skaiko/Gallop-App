@@ -1,10 +1,12 @@
 import { useState, type FormEvent, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { supabase } from './lib/supabase';
 import './LoginSignup.css';
 
 function LoginSignup() {
   const [isLogin, setIsLogin] = useState(true);
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   // Check if URL has ?mode=signup
   // Homepage selection between Login/SignUp
@@ -47,17 +49,25 @@ function LoginSignup() {
 
       console.log('Patient signup submitted:', { fullName, email });
 
-      // TODO: Add Supabase signup for patients
-      // const { data, error } = await supabase.auth.signUp({
-      //   email,
-      //   password,
-      //   options: {
-      //     data: {
-      //       full_name: fullName,
-      //       user_type: 'patient'
-      //     }
-      //   }
-      // })
+      // Save to users table
+      const { error } = await supabase
+        .from('users')
+        .insert({
+          email: email,
+          password: password,
+          full_name: fullName
+        });
+
+      if (error) {
+        alert(`Signup failed: ${error.message}`);
+        return;
+      }
+
+      alert('Signup successful! You can now log in.');
+      
+      // Redirect to login page
+      setIsLogin(true);
+      navigate('/auth');
     }
   };
 
@@ -75,7 +85,7 @@ function LoginSignup() {
         <img src="/horseshoe-pink.png" alt="" className="horseshoe horseshoe-7" />
       </div>
 
-      /* Lo  
+      {/* Logo and Auth Container */}
       <div className="auth-container">
         <div className="auth-header">
           <Link to="/">
