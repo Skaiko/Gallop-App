@@ -1,9 +1,19 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
+import HomePage from './HomePage'
+import LoginSignup from './LoginSignup'
 
-export default function App() {
+function App() {
   return (
-    <div className="welcome-container">
-      <h1 className="welcome-text">Welcome</h1>
-    </div>
-  );
+    <Router>
+      <div className="app">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/auth" element={<LoginSignup />} />
+        </Routes>
+      </div>
+    </Router>
+  )
 }
+
+export default App

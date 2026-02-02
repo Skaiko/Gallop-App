@@ -1,3 +1,5 @@
+// Purpose of this file is that it is where the React App starts
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
