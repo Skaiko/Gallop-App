@@ -36,6 +36,9 @@ function LoginSignup() {
       //   email,
       //   password
       // })
+      
+      // Redirect to dashboard after login
+      navigate('/dashboard');
     } else {
       // Signup for patients only
       const fullName = formData.get('fullName') as string;
