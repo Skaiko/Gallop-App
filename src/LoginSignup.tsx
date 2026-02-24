@@ -4,6 +4,7 @@ import './LoginSignup.css';
 
 function LoginSignup() {
   const [isLogin, setIsLogin] = useState(true);
+  const [selectedRole, setSelectedRole] = useState('patient');
   const [searchParams] = useSearchParams();
 
   // Check if URL has ?mode=signup
@@ -172,6 +173,29 @@ function LoginSignup() {
                   />
                 </div>
               )}
+
+
+              {!isLogin && (
+                 <div className="form-group">
+                  <label htmlFor="role">
+                    <span className="label-icon">🏅</span>
+                    I am a...
+                    </label>
+                  <select
+                  id="role"
+                  name="role"
+                  value={selectedRole}
+                  onChange={(e) => setSelectedRole(e.target.value)}
+                  required
+                >
+                  <option value="patient">Patient</option>
+                  <option value="pt">Physical Therapist</option>
+                  <option value="admin">Administrator</option>
+                </select>
+              </div>
+            )}
+                
+
 
               {isLogin && (
                 <div className="form-options">
