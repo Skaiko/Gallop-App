@@ -28,14 +28,29 @@ function LoginSignup() {
     if (isLogin) {
       console.log('Login submitted:', { email });
 
-      // TODO: Add Supabase login
-      // const { data, error } = await supabase.auth.signInWithPassword({
-      //   email,
-      //   password
-      // })
-      
-      // Redirect to dashboard after login
-      navigate('/dashboard');
+      const { data: loginUser, error: loginError } = await supabase
+        .from('users')
+        .select('id, role')
+        .eq('email', email)
+        .maybeSingle();
+
+      if (loginError) {
+        alert(`Login failed: ${loginError.message}`);
+        return;
+      }
+
+      if (!loginUser) {
+        alert('Login failed: no account found for this email.');
+        return;
+      }
+
+      if (loginUser.role === 'pt') {
+        navigate('/dashboard/pt');
+      } else if (loginUser.role === 'admin') {
+        navigate('/dashboard/admin');
+      } else {
+        navigate('/dashboard/patient');
+      }
     } else {
       const fullName = formData.get('fullName') as string;
       const confirmPassword = formData.get('confirmPassword') as string;
@@ -45,20 +60,48 @@ function LoginSignup() {
         return;
       }
 
-      console.log('Signup submitted:', { fullName, email, role: selectedRole });
+      const trimmedName = fullName.trim();
+      console.log('Signup submitted:', { fullName: trimmedName, email, role: selectedRole });
 
-      // Save to users table
-      const { error } = await supabase
+      const { data: existingUser, error: findError } = await supabase
         .from('users')
-        .insert({
+        .select('id, email')
+        .eq('full_name', trimmedName)
+        .eq('role', selectedRole)
+        .maybeSingle();
+
+      if (findError) {
+        alert(`Signup failed: ${findError.message}`);
+        return;
+      }
+
+      if (!existingUser) {
+        alert('Signup failed: name and role were not found in our records.');
+        return;
+      }
+
+      if (existingUser.email) {
+        alert('An account already exists for this name and role.');
+        return;
+      }
+
+      const { data: updatedRows, error: updateError } = await supabase
+        .from('users')
+        .update({
           email: email,
           password: password,
-          full_name: fullName,
-          user_type: selectedRole
-        });
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', existingUser.id)
+        .select('id, email');
 
-      if (error) {
-        alert(`Signup failed: ${error.message}`);
+      if (updateError) {
+        alert(`Signup failed: ${updateError.message}`);
+        return;
+      }
+
+      if (!updatedRows || updatedRows.length === 0) {
+        alert('Signup failed: update was blocked. Check RLS policies for the users table.');
         return;
       }
 
