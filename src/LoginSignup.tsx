@@ -5,30 +5,27 @@ import './LoginSignup.css';
 
 function LoginSignup() {
   const [isLogin, setIsLogin] = useState(true);
+  const [selectedRole, setSelectedRole] = useState('patient');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // Check if URL has ?mode=signup
-  // Homepage selection between Login/SignUp
   useEffect(() => {
     const mode = searchParams.get('mode');
     if (mode === 'signup') {
       setIsLogin(false);
     } else {
-      setIsLogin(true); 
+      setIsLogin(true);
     }
   }, [searchParams]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Get form data
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
     if (isLogin) {
-      // Login for all user types (PT, Patient, Admin)
       console.log('Login submitted:', { email });
 
       // TODO: Add Supabase login
@@ -40,17 +37,15 @@ function LoginSignup() {
       // Redirect to dashboard after login
       navigate('/dashboard');
     } else {
-      // Signup for patients only
       const fullName = formData.get('fullName') as string;
       const confirmPassword = formData.get('confirmPassword') as string;
 
-      // Basic validation
       if (password !== confirmPassword) {
         alert('Passwords do not match!');
         return;
       }
 
-      console.log('Patient signup submitted:', { fullName, email });
+      console.log('Signup submitted:', { fullName, email, role: selectedRole });
 
       // Save to users table
       const { error } = await supabase
@@ -58,7 +53,8 @@ function LoginSignup() {
         .insert({
           email: email,
           password: password,
-          full_name: fullName
+          full_name: fullName,
+          user_type: selectedRole
         });
 
       if (error) {
@@ -67,16 +63,19 @@ function LoginSignup() {
       }
 
       alert('Signup successful! You can now log in.');
-      
-      // Redirect to login page
-      setIsLogin(true);
-      navigate('/auth');
+
+      // Redirect based on role
+      if (selectedRole === 'pt') {
+        navigate('/dashboard/pt');
+      } else if (selectedRole === 'admin') {
+        navigate('/dashboard/admin');
+      } else {
+        navigate('/dashboard/patient');
+      }
     }
   };
 
   return (
-    // Background horseshoes
-    // Logo of Gallop to return to Homepage
     <div className="auth-page">
       <div className="floating-horseshoes">
         <img src="/horseshoe-red.png" alt="" className="horseshoe horseshoe-1" />
@@ -88,7 +87,6 @@ function LoginSignup() {
         <img src="/horseshoe-pink.png" alt="" className="horseshoe horseshoe-7" />
       </div>
 
-      {/* Logo and Auth Container */}
       <div className="auth-container">
         <div className="auth-header">
           <Link to="/">
@@ -183,6 +181,26 @@ function LoginSignup() {
                     placeholder="Confirm your password"
                     required
                   />
+                </div>
+              )}
+
+              {!isLogin && (
+                <div className="form-group">
+                  <label htmlFor="role">
+                    <span className="label-icon">🏅</span>
+                    I am a...
+                  </label>
+                  <select
+                    id="role"
+                    name="role"
+                    value={selectedRole}
+                    onChange={(e) => setSelectedRole(e.target.value)}
+                    required
+                  >
+                    <option value="patient">Patient</option>
+                    <option value="pt">Physical Therapist</option>
+                    <option value="admin">Administrator</option>
+                  </select>
                 </div>
               )}
 
