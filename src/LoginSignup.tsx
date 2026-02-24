@@ -63,25 +63,58 @@ function LoginSignup() {
       const trimmedName = fullName.trim();
       console.log('Signup submitted:', { fullName: trimmedName, email, role: selectedRole });
 
-      const { data: existingUser, error: findError } = await supabase
+      // Find all users with matching name + role that don't have an email yet
+      const { data: availableUsers, error: findError } = await supabase
         .from('users')
         .select('id, email')
         .eq('full_name', trimmedName)
         .eq('role', selectedRole)
-        .maybeSingle();
+        .is('email', null);
 
       if (findError) {
         alert(`Signup failed: ${findError.message}`);
         return;
       }
 
-      if (!existingUser) {
-        alert('Signup failed: name and role were not found in our records.');
+      if (!availableUsers || availableUsers.length === 0) {
+        alert('Signup failed: name and role were not found in our records, or all accounts are already registered.');
         return;
       }
 
-      if (existingUser.email) {
-        alert('An account already exists for this name and role.');
+      // Pick the first available user slot
+      const existingUser = availableUsers[0];
+
+      // Check if this email already exists in any account
+      const { data: emailExists, error: emailError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', email)
+        .maybeSingle();
+
+      if (emailError) {
+        alert(`Signup failed: ${emailError.message}`);
+        return;
+      }
+
+      if (emailExists) {
+        alert('This email already exists in our system.');
+        return;
+      }
+
+      // Check if this password already exists in any account
+      const { data: passwordExists, error: passwordError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('password', password)
+        .maybeSingle();
+
+      if (passwordError) {
+        alert(`Signup failed: ${passwordError.message}`);
+        return;
+      }
+
+      if (passwordExists) {
+        alert('This password already exists in our system.');
         return;
       }
 
