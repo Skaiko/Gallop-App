@@ -30,7 +30,7 @@ function LoginSignup() {
 
       const { data: loginUser, error: loginError } = await supabase
         .from('users')
-        .select('id, role')
+        .select('id, role, password')
         .eq('email', email)
         .maybeSingle();
 
@@ -41,6 +41,11 @@ function LoginSignup() {
 
       if (!loginUser) {
         alert('Login failed: no account found for this email.');
+        return;
+      }
+
+      if (loginUser.password !== password) {
+        alert('Login failed: incorrect password.');
         return;
       }
 
