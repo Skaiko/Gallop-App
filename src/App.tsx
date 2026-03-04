@@ -2,18 +2,20 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
 import HomePage from './HomePage'
 import LoginSignup from './LoginSignup'
-import Dashboard from './Dashboard'
+import PTDashboard from './PTDashboard'
+import AdminDashboard from './AdminDashboard'
+import PatientDashboard from './PatientDashboard'
 
 function App() {
   return (
     <Router>
-      <div className="app">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/auth" element={<LoginSignup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<div className="app"><HomePage /></div>} />
+        <Route path="/auth" element={<div className="app"><LoginSignup /></div>} />
+        <Route path="/dashboard/pt" element={<PTDashboard />} />
+        <Route path="/dashboard/admin" element={<AdminDashboard />} />
+        <Route path="/dashboard/patient" element={<PatientDashboard />} />
+      </Routes>
     </Router>
   )
 }
